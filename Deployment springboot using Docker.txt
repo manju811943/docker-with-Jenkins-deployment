@@ -1,0 +1,128 @@
+
+*** deploy sprinboot application in docker ***
+
+1. create one sprinboot application and one get api for testing -> controller - getMAppaing
+
+2. <finalName>rest-spring-boot</finalName>  = add this in pom.xml <build> tag and rest-spring-boot replce with your application name
+
+3. add Dockerfile in root folder and contnet below
+		FROM mcr.microsoft.com/openjdk/jdk:21-azurelinux
+		#FROM eclipse-temurin:17-jdk  for jdk 17
+		COPY target/rest-spring-boot.jar  /usr/app/   => rest-spring-boot replce with your application name
+		WORKDIR /usr/app/
+		EXPOSE 8080
+		ENTRYPOINT ["java", "-jar", "rest-spring-boot.jar"]
+		
+4. push entire code to github
+
+5. create ec2 instace and install Docker, git, maven  
+
+	Note : if you want to add jenkins then create ubantu ec2 4gib ram instance.
+	
+	Docker =
+		1.	sudo yum update -y 
+			sudo yum install docker -y
+			sudo service docker start
+			sudo usermod -aG docker ec2-user
+			exit
+			
+	Git ==
+		2.	sudo yum update -y
+			sudo yum install git -y
+			
+			for ubuntu:
+			sudo apt-get update -y
+			sudo apt-get install git -y
+
+			
+	Maven =
+		3.  	sudo yum update -y                => check which maven version jdk will install (may 17 by default)
+				sudo yum install maven -y	
+
+				for ubuntu:
+				sudo apt-get update -y
+				sudo apt-get install maven -y
+
+
+	JDK = If require JDK 21 use this below command to insatall JDK 21
+		4.	
+			sudo yum update -y
+			sudo dnf install java-21-amazon-corretto-devel
+			java -version
+
+	now java --version
+	    javac --version 
+	    mvn -v      ==> all should same version eg:21
+	
+6. git clone <repo>
+
+7. go inside project => cd <project name>
+
+8. run mvn clean package -> will create target folder
+
+9. docker build -t rest-spring-boot:latest .  ->  rest-spring-boot replce with your application name
+
+10. docker run -p 8080:8080 rest-spring-boot:latest .   ->  rest-spring-boot replce with your application name
+		
+			
+	==>	If we wan to host in differenct container, 
+		8000:9000 => <container port>:<application port>
+		<container port> ==> in which port docker container has to run
+		<application port> ==> in which your springboot actually running
+		below command will run your appplication in 8000 conatiner port
+		docker run -p 8000:9000 springboot-docker-example:latest  
+
+
+11. http://13.203.216.247:8080/employee/emp  ==> <public ip>:<port>/<controller mapping>/<api mapping>
+
+
+	** Now to add Jenkins setup to the same **
+
+1. stop your conatiner
+2. to the same ec2 server install	Docker and Jenkins
+
+	docker :-
+
+	curl -fsSL get.docker.com | /bin/bash
+			sudo usermod -aG docker jenkins
+			sudo usermod -aG docker ubuntu
+			sudo systemctl restart jenkins
+			sudo docker version
+			
+	install Jenkins on ec2  => here below command will set GPG key and install Jenkins
+	
+		sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  		https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+		echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  		https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  		/etc/apt/sources.list.d/jenkins.list > /dev/null
+		sudo apt-get update
+		sudo apt-get install jenkins
+	
+
+3. should stop which is running container and start build in Jenkins.
+
+docker run -d -p 9000:9000 --name springboot-docker-example springboot-docker-example:latest
+
+=================================
+1. by default ec2 having java 17
+	even if you run sudo yum install java-21-amazon-corretto -y 
+	java jdk changed to 21 but javac still the 17
+
+	so, install 
+
+	This ensures both java and javac point to JDK 21.
+
+	Set Java 21 as default:
+	sudo update-alternatives --config java
+
+
+	Set Javac 21 as default:
+	sudo update-alternatives --config javac
+
+	java --version
+	javac --version
+ 
+
+ 
+ 
