@@ -41,7 +41,63 @@
 
 				for ubuntu:
 				sudo apt-get update -y
-				sudo apt-get install maven -y
+				sudo apt-get install maven -y  //by default maven will insallted 3.8.X version which is old will not support for JDK 21
+
+	==> so, to install maven 3.9.11 in linux os
+
+	# Download Maven 3.9.11
+	cd /tmp
+	wget https://archive.apache.org/dist/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
+	
+	# Extract Maven to /opt
+	sudo tar -xvzf apache-maven-3.9.11-bin.tar.gz -C /opt
+	
+	# Remove old symlink if exists
+	sudo rm -rf /opt/maven
+	
+	# Create symlink
+	sudo ln -s /opt/apache-maven-3.9.11 /opt/maven
+	
+	# Set environment variables
+	echo "export M2_HOME=/opt/maven" | sudo tee /etc/profile.d/maven.sh
+	echo "export MAVEN_HOME=/opt/maven" | sudo tee -a /etc/profile.d/maven.sh
+	echo "export PATH=\$PATH:\$M2_HOME/bin" | sudo tee -a /etc/profile.d/maven.sh
+	
+	# Apply changes
+	source /etc/profile.d/maven.sh
+	
+	# Verify installation
+	mvn -version
+	java -version
+
+
+==> to install maven in ubuntu 
+
+	# Remove old Maven if installed
+	sudo apt remove maven -y
+	
+	# Download Maven 3.9.11
+	cd /tmp
+	wget https://dlcdn.apache.org/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
+	
+	# Extract Maven to /opt
+	sudo tar xf apache-maven-3.9.11-bin.tar.gz -C /opt
+	
+	# Create symlink
+	sudo ln -s /opt/apache-maven-3.9.11 /opt/maven
+	
+	# Set environment variables
+	echo "export M2_HOME=/opt/maven" | sudo tee /etc/profile.d/maven.sh
+	echo "export PATH=\$PATH:\$M2_HOME/bin" | sudo tee -a /etc/profile.d/maven.sh
+	
+	# Apply changes
+	source /etc/profile.d/maven.sh
+	
+	# Verify installation
+	mvn -version
+	java -version
+
+	
 
 
 	JDK = If require JDK 21 use this below command to insatall JDK 21
@@ -122,7 +178,17 @@ docker run -d -p 9000:9000 --name springboot-docker-example springboot-docker-ex
 
 	java --version
 	javac --version
+
+============================================
+
+
+to push docker image docker hub
+	1. docker tag rest-spring-boot:v1 811943/rest-spring-boot:v1
+	2. docker login 
+					it will give url to open in browser amd please enter otp in browser to validate
+	3. docker push 811943/rest-spring-boot:v1
  
 
  
  
+
