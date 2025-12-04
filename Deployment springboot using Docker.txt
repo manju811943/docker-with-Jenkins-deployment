@@ -37,6 +37,8 @@
 	Java 21 :
 			sudo apt update
 			sudo apt install openjdk-21-jdk -y
+			sudo yum install java-21-amazon-corretto -y
+
 			
 	Maven =
 		3.  	sudo yum update -y                => check which maven version jdk will install (may 17 by default)
@@ -194,5 +196,6 @@ to push docker image docker hub
 
  
  
+
 
 
