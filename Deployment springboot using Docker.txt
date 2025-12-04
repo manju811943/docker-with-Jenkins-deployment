@@ -34,6 +34,9 @@
 			sudo apt-get update -y
 			sudo apt-get install git -y
 
+	Java 21 :
+			sudo apt update
+			sudo apt install openjdk-21-jdk -y
 			
 	Maven =
 		3.  	sudo yum update -y                => check which maven version jdk will install (may 17 by default)
@@ -191,4 +194,5 @@ to push docker image docker hub
 
  
  
+
 
