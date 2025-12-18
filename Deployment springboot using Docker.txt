@@ -95,29 +95,34 @@
 
 ==> to install maven in ubuntu 
 
-	# Remove old Maven if installed
-	sudo apt remove maven -y
 	
-	# Download Maven 3.9.11
-	cd /tmp
-	wget https://dlcdn.apache.org/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
-	
-	# Extract Maven to /opt
-	sudo tar xf apache-maven-3.9.11-bin.tar.gz -C /opt
-	
-	# Create symlink
-	sudo ln -s /opt/apache-maven-3.9.11 /opt/maven
-	
-	# Set environment variables
-	echo "export M2_HOME=/opt/maven" | sudo tee /etc/profile.d/maven.sh
-	echo "export PATH=\$PATH:\$M2_HOME/bin" | sudo tee -a /etc/profile.d/maven.sh
-	
-	# Apply changes
-	source /etc/profile.d/maven.sh
-	
-	# Verify installation
-	mvn -version
-	java -version
+# Go to /tmp
+cd /tmp
+
+# Download Maven 3.9.11
+wget https://archive.apache.org/dist/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
+
+# Extract Maven to /opt
+sudo tar -xvzf apache-maven-3.9.11-bin.tar.gz -C /opt
+
+# Remove old symlink if it exists
+sudo rm -rf /opt/maven
+
+# Create a new symlink to the extracted Maven directory
+sudo ln -s /opt/apache-maven-3.9.11 /opt/maven
+
+# Create environment variable setup script
+echo "export M2_HOME=/opt/maven" | sudo tee /etc/profile.d/maven.sh
+echo "export MAVEN_HOME=/opt/maven" | sudo tee -a /etc/profile.d/maven.sh
+echo "export PATH=\$PATH:\$M2_HOME/bin" | sudo tee -a /etc/profile.d/maven.sh
+
+# Apply environment variables
+source /etc/profile.d/maven.sh
+
+# Verify Maven installation
+mvn -version
+java -version
+
 
 	
 
@@ -213,6 +218,7 @@ to push docker image docker hub
 
  
  
+
 
 
 
